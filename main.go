@@ -15,10 +15,17 @@ func main() {
 	fmt.Println("Reading Config")
 	var data []byte
 	var err error
+	var url string
 	if _, fileError := os.Stat("/config/schema.json"); errors.Is(fileError, os.ErrNotExist) {
 		data, err = os.ReadFile("./schema.json")
+
+		//TODO: Stop hardcoding this
+		url = "http://admin:password@localhost:41000/"
 	} else {
 		data, err = os.ReadFile("/config/schema.json")
+
+		//TODO: Stop hardcoding this
+		url = "http://admin:password@streaming-couchdb-service:41000/"
 	}
 
 	if err != nil {
@@ -32,9 +39,6 @@ func main() {
 		fmt.Println("Error parsing config. ", err)
 		return
 	}
-
-	//TODO: Stop hardcoding this
-	var url = "http://admin:password@localhost:41000/"
 
 	for _, database := range schema.Databases {
 		resp, err := http.Get(fmt.Sprintf(url+"%s", database.Name))
