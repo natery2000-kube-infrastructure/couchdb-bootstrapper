@@ -90,7 +90,7 @@ func main() {
 			resp, err = client.Do(req)
 			respBytes, _ = ioutil.ReadAll(resp.Body)
 			json.Unmarshal(respBytes, &couchResponse)
-			if err != nil || couchResponse.Error != "" {
+			if err != nil || resp.StatusCode != 201 {
 				fmt.Println("Error sending request to create designdoc. ", err, couchResponse)
 				continue
 			} else {
@@ -113,8 +113,8 @@ type designDoc struct {
 	Name     string                 `json:"name"`
 	Language string                 `json:"language"`
 	Views    map[string]interface{} `json:"views"`
-	Id       string                 `json:"_id"`
-	Rev      string                 `json:"_rev"`
+	Id       string                 `json:"_id,omitempty"`
+	Rev      string                 `json:"_rev,omitempty"`
 }
 
 type couchResponse struct {
